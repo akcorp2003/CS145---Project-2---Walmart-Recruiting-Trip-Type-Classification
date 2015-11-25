@@ -14,20 +14,22 @@ public class main_entry {
 			System.exit(1);
 		}
 		
-		String filename = "train2.csv"; 
+		String filename = args[0]; 
 		BufferedReader br = null;
 		String line = "";
-		String cvsSplitBy = ",";
-		List<String[]> tripList = new ArrayList<String[]>();
-		
+		String delimiter = ",";
+		ArrayList<String[]> tripList = new ArrayList<String[]>();
+		String[] columnHeaders = null;
+				
 		try {
 
 			br = new BufferedReader(new FileReader(filename));
 			line = br.readLine(); //skip the first line that contains the titles of the columns.
+			columnHeaders = line.split(delimiter);
 			while ((line = br.readLine()) != null) {
 
 			        // use comma as separator
-				String[] trip = line.split(cvsSplitBy);
+				String[] trip = line.split(delimiter);
 				tripList.add(trip);
 //hello this is test 2
 			}
@@ -45,9 +47,10 @@ public class main_entry {
 				}
 			}
 		}
-
+		InformationGainCalculator igc = new InformationGainCalculator(tripList, columnHeaders);
+		double value = igc.CalculateEntropy();
 		
-		System.out.println(filename);
+		System.out.println(value);
 		
 		
 		//I'm also thinking we need some sort of node class to
