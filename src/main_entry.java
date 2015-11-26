@@ -49,8 +49,10 @@ public class main_entry {
 		}
 		InformationGainCalculator igc = new InformationGainCalculator(tripList, columnHeaders);
 		double value = igc.CalculateEntropy();
+		double other_value = igc.CalculateAttributeEntropy(5);
 		
 		System.out.println(value);
+		System.out.println(other_value);
 		
 		
 		//I'm also thinking we need some sort of node class to

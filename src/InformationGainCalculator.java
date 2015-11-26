@@ -64,7 +64,7 @@ public class InformationGainCalculator {
 		while(it.hasNext()){
 			String[] currTrip = (String[]) it.next();
 			if(attributeTypes.containsKey(currTrip[index])){
-				attributeTypes.put(currTrip[index], (int)attributeTypes.get(currTrip[0])+1);
+				attributeTypes.put(currTrip[index], (int)attributeTypes.get(currTrip[index])+1);
 			}
 			else{
 				attributeTypes.put(currTrip[index], 1);
@@ -79,12 +79,12 @@ public class InformationGainCalculator {
 					attr_triptypes.put(currTrip[index], trip_occurences);
 				}
 				else{
-					HashMap<String, Integer> trip_occurences_temp = new HashMap<String, Integer>();
-					trip_occurences_temp.put(currTrip[0], 1);
-					attr_triptypes.put(currTrip[index], trip_occurences_temp);
+					trip_occurences.put(currTrip[0], 1);
+					attr_triptypes.put(currTrip[index], trip_occurences);
 				}
 			}
 			else{
+				//we do not necessarily need this, just in case something went awry in the last if-else
 				HashMap<String, Integer> triptypes_temp = new HashMap<String, Integer>();
 				triptypes_temp.put(currTrip[0], 1);
 				attr_triptypes.put(currTrip[index], triptypes_temp);
@@ -93,14 +93,31 @@ public class InformationGainCalculator {
 		}//end while
 		
 		double value = 0;
-		Set<String> s = attr_triptypes.keySet();
+		Set<String> s_attrtriptypes = attr_triptypes.keySet();
+		Set<String> s_attributeTypes = attributeTypes.keySet();
 		
 		//calculate the entropy of the attribute
-		for(String attr : s){
+		for(String attr : s_attributeTypes){
+			//first compute the coefficient value
+			int num = attributeTypes.get(attr);
+			double outer_fraction = (double)num / numberOfTrips;
+			
+			//compute the inner entropy values
+			double inner_value = 0;
 			HashMap<String, Integer> triptypes_temp2 = attr_triptypes.get(attr);
-		}
+			Set<String> s_attr_triptypes_temp2 = triptypes_temp2.keySet();
+			for(String trip : s_attr_triptypes_temp2){
+				int num_occur = triptypes_temp2.get(trip);
+				double fraction = (double)num_occur/num;
+				inner_value -= fraction * (Math.log(fraction)/Math.log(2));
+				
+			}//end for
+			
+			value += (outer_fraction * inner_value);
 		
-		return 0;
+		}//end for
+		
+		return value;
 		
 	}
 	
