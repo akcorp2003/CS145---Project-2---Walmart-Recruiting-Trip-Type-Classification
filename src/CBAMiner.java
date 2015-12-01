@@ -22,7 +22,7 @@ public class CBAMiner {
 	 * Builds the matrix for the _tripList ArrayList that was given to the class
 	 * @return A 2D array of the resulting matrix
 	 */
-	public CBAMiner_returnpackage buildMatrix(Map<ArrayList<String>, Integer> freqDepartments){
+	public CBAMiner_returnpackage buildMatrix(Map<String, Integer> freqDepartments){
 		
 		//ArrayList<ArrayList<Integer>> CBAmatrix = new ArrayList<ArrayList<Integer>>();
 		System.out.print("in process of building matrix\n");
@@ -48,8 +48,8 @@ public class CBAMiner {
 		}
 		
 		//NEED TO FIX SO THAT BECOME SET<STRING> NOT SET<ARRAYLIST<STRING>>
-		//Set<String> COLUMN = freqDepartments.keySet();
-		Set<String> COLUMN = Departments.keySet();
+		Set<String> COLUMN = freqDepartments.keySet();
+		//Set<String> COLUMN = Departments.keySet();
 		Set<String> ROW = TripTypes.keySet();
 		
 		//begin building the matrix

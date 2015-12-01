@@ -78,7 +78,7 @@ public class Entry {
 		System.out.print(absoluteMinSup);
 		System.out.print("\n");
 		FrequentItemsetMiner fim = new FrequentItemsetMiner(tripList, columnHeaders);
-		Map<ArrayList<String>, Integer> freqDepartments= fim.Mine(absoluteMinSup, 1);
+		Map<String, Integer> freqDepartments= fim.Mine(absoluteMinSup, 1);
 		System.out.print("num of departments: ");
 		System.out.print(freqDepartments.size());
 		System.out.print("\n");
