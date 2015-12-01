@@ -143,12 +143,15 @@ public CBAMiner_returnpackage buildMatrix(Map<String, Integer> freqDepartments){
 		for(String triptype : classes){
 			ArrayList<Integer> triptype_row = _CBAmatrix.get(triptype);
 			//iterate through the row and check for 1
-			for(Integer value : triptype_row){
+			for(int i = 0; i < triptype_row.size(); i++){
 				//if 1, create a rule item and add to arraylist
-				if(value == 1){
+				if(triptype_row.get(i) == 1){
 					//need way to get department via column_indices
 					//RuleItem newRule = newRuleTime(department,tripType);
 					//rules.add(newRule);
+					Set<String> depts = new HashSet<String>();
+					depts.add(_column_index_2.get(i));
+					rules.add(new RuleItem(depts,triptype));
 				}
 			}
 			
