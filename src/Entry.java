@@ -1,14 +1,13 @@
-/*import java.io.BufferedReader;
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
-
-public class main_entry {
-	public static void main(String args[])
-	{
+public class Entry {
+	
+	public static void main(String[] args){
+		
 		if(args.length < 1){
 			System.err.println("Please specify filename");
 			System.exit(1);
@@ -31,7 +30,6 @@ public class main_entry {
 			        // use comma as separator
 				String[] trip = line.split(delimiter);
 				tripList.add(trip);
-//hello this is test 2
 			}
 
 		} catch (FileNotFoundException e) {
@@ -47,16 +45,19 @@ public class main_entry {
 				}
 			}
 		}
-		InformationGainCalculator igc = new InformationGainCalculator(tripList, columnHeaders);
-		double value = igc.CalculateEntropy();
-		double other_value = igc.CalculateAttributeEntropy(5);
 		
-		System.out.println(value);
-		System.out.println(other_value);
+		int j = 0;
+		
+		//Scan the database to find frequent itemsets
+		//only scanning Department for now
+		
+		FrequentItemsetMiner fim = new FrequentItemsetMiner(tripList, columnHeaders);
+		fim.Mine(3, 1);
 		
 		
-		//I'm also thinking we need some sort of node class to
-		//hold all the branches and decisions
+		
+		
+		
 	}
+
 }
-*/
