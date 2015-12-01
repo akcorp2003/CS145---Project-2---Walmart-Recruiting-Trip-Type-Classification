@@ -47,12 +47,15 @@ public class main_entry {
 				}
 			}
 		}
-		InformationGainCalculator igc = new InformationGainCalculator(tripList, columnHeaders);
+		/*InformationGainCalculator igc = new InformationGainCalculator(tripList, columnHeaders);
 		double value = igc.CalculateEntropy();
-		double other_value = igc.CalculateAttributeEntropy(5);
+		double other_value = igc.CalculateAttributeEntropy(5);*/
 		
-		System.out.println(value);
-		System.out.println(other_value);
+		CBAMiner cbm = new CBAMiner(tripList, columnHeaders);
+		CBAMiner_returnpackage cbm_returns = cbm.buildMatrix();
+		
+		/*System.out.println(value);
+		System.out.println(other_value);*/
 		
 		
 		//I'm also thinking we need some sort of node class to
