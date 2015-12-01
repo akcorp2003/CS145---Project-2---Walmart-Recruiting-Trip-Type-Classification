@@ -7,7 +7,8 @@ public class CBAMiner {
 	
 	private ArrayList<String[]> _tripList;
 	private String[] _headers;
-	private Map<String, Integer> _columnindex; //provides an index of what columns represent in our matrix
+	private Map<String, Integer> _columnindex_1; //provides an index of what columns represent in our matrix
+	private Map<Integer, String> _columnindex_2; //provides an index of what columns represent in our matrix
 	//private Map<String, Integer> _rowindex; //provides an index of what rows represent in our matrix
 	private Map<String, ArrayList<Integer>> _CBAmatrix; //the string is the row of the matrix and the ArrayList is the column
 	
@@ -15,7 +16,7 @@ public class CBAMiner {
 		_tripList = tripList;
 		_headers =headers;
 		_CBAmatrix = new HashMap<String, ArrayList<Integer>>();
-		_columnindex = new HashMap<String, Integer>();
+		_columnindex_1 = new HashMap<String, Integer>();
 	}
 	
 	/**
@@ -70,10 +71,13 @@ public CBAMiner_returnpackage buildMatrix(Map<String, Integer> freqDepartments){
 		//build the index that will help us locate where the Departments are in the ArrayList in _CBAmatrix
 		int index = 0;
 		for(String department : COLUMN){
-			if(!_columnindex.containsKey(department)){
-				_columnindex.put(department, index);
-				index++;
+			if(!_columnindex_1.containsKey(department)){
+				_columnindex_1.put(department, index);
 			}
+			if(!_columnindex_2.containsKey(index)){
+				_columnindex_2.put(index, department);
+			}
+			index++;
 		}
 		
 		//with all the setup things done, we can finally construct the matrix
@@ -83,8 +87,8 @@ public CBAMiner_returnpackage buildMatrix(Map<String, Integer> freqDepartments){
 				//get index of the column
 				//some departments will be pruned out so it's possible that trip[5] will not be indexed
 				//and it's safe to ignore it
-				if(_columnindex.containsKey(trip[5])){
-					index = _columnindex.get(trip[5]);
+				if(_columnindex_1.containsKey(trip[5])){
+					index = _columnindex_1.get(trip[5]);
 				}
 				else{
 					continue;
@@ -98,7 +102,7 @@ public CBAMiner_returnpackage buildMatrix(Map<String, Integer> freqDepartments){
 		}
 		
 		//we now have our matrix!
-		CBAMiner_returnpackage CBAmatrix = new CBAMiner_returnpackage(_CBAmatrix, _columnindex);
+		CBAMiner_returnpackage CBAmatrix = new CBAMiner_returnpackage(_CBAmatrix, _columnindex_1, _columnindex_2);
 		
 		
 		return CBAmatrix;
@@ -110,7 +114,7 @@ public CBAMiner_returnpackage buildMatrix(Map<String, Integer> freqDepartments){
 	 */
 	public boolean checkMatrix(){
 		Set<String> classes = _CBAmatrix.keySet();
-		Set<String> column_indices = _columnindex.keySet();
+		Set<String> column_indices = _columnindex_1.keySet();
 		
 		for(String triptype : classes){
 			ArrayList<Integer> triptype_row = _CBAmatrix.get(triptype);
@@ -132,7 +136,7 @@ public CBAMiner_returnpackage buildMatrix(Map<String, Integer> freqDepartments){
 	public ArrayList<RuleItem> generateRules(){
 		ArrayList<RuleItem> rules = new ArrayList<RuleItem>();
 		Set<String> classes = _CBAmatrix.keySet();
-		Set<String> column_indices = _columnindex.keySet();
+		Set<String> column_indices = _columnindex_1.keySet();
 		
 		//loop through each row of matrix
 		for(String triptype : classes){
