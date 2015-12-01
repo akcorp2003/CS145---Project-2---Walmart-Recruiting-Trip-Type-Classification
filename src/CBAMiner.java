@@ -22,7 +22,7 @@ public class CBAMiner {
 	 * Builds the matrix for the _tripList ArrayList that was given to the class
 	 * @return A 2D array of the resulting matrix
 	 */
-	public CBAMiner_returnpackage buildMatrix(Map<String, Integer> freqDepartments){
+public CBAMiner_returnpackage buildMatrix(Map<String, Integer> freqDepartments){
 		
 		//ArrayList<ArrayList<Integer>> CBAmatrix = new ArrayList<ArrayList<Integer>>();
 		System.out.print("in process of building matrix\n");
@@ -103,7 +103,7 @@ public class CBAMiner {
 		
 		return CBAmatrix;
 	}
-	
+
 	/**
 	 * Verifies that for all classes in the matrix, there is at least a value of 1 in that class
 	 * @return
@@ -126,5 +126,37 @@ public class CBAMiner {
 		}
 		
 		return true;
+	}
+	
+	//generate size 1 possible rule items
+	public ArrayList<RuleItem> generateRules(){
+		ArrayList<RuleItem> rules = new ArrayList<RuleItem>();
+		Set<String> classes = _CBAmatrix.keySet();
+		Set<String> column_indices = _columnindex.keySet();
+		
+		//loop through each row of matrix
+		for(String triptype : classes){
+			ArrayList<Integer> triptype_row = _CBAmatrix.get(triptype);
+			//iterate through the row and check for 1
+			for(Integer value : triptype_row){
+				//if 1, create a rule item and add to arraylist
+				if(value == 1){
+					//need way to get department via column_indices
+					//RuleItem newRule = newRuleTime(department,tripType);
+					//rules.add(newRule);
+				}
+			}
+			
+		}
+		return rules;
+	}
+	
+	public ArrayList<RuleItem> computeSupAndConf(ArrayList<RuleItem> possibleRules){
+		//for each rule item 
+		for (RuleItem r : possibleRules){
+			//compute support and confidence of item sets 
+			//set support and confidence of rules
+		}
+		return possibleRules;
 	}
 }

@@ -94,6 +94,9 @@ public class Entry {
 		CBAMiner cba = new CBAMiner(tripList,columnHeaders);
 		cba.buildMatrix(freqDepartments);
 		
+		System.out.print("generating rules\n");
+		ArrayList<RuleItem> possibleRuleItems = cba.generateRules();
+		possibleRuleItems = cba.computeSupAndConf(possibleRuleItems);
 	}
 
 }
