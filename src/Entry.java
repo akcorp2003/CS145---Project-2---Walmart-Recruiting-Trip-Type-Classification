@@ -4,16 +4,31 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import static java.lang.Math.toIntExact;
+
 public class Entry {
 	
 	public static void main(String[] args){
 		
-		if(args.length < 1){
-			System.err.println("Please specify filename");
+		if(args.length < 2){
+			System.err.println("Error: Please specify filename and minSup where 0<=minSup<=1");
 			System.exit(1);
 		}
 		
 		String filename = args[0]; 
+		double minSup = -1;
+		try{
+			minSup = Double.parseDouble(args[1]);
+		}
+		catch(NumberFormatException e){
+			System.err.println("Error: Please specify a numerical value for minSup");
+			System.exit(1);
+		}
+		
+		if(minSup > 1 || minSup < 0){
+			System.err.println("Error: Please specify a value between 0 and 1 for minSup");
+			System.exit(1);
+		}
 		BufferedReader br = null;
 		String line = "";
 		String delimiter = ",";
@@ -50,9 +65,9 @@ public class Entry {
 		
 		//Scan the database to find frequent itemsets
 		//only scanning Department for now
-		
+		int absoluteMinSup = toIntExact( Math.round(minSup*tripList.size()));
 		FrequentItemsetMiner fim = new FrequentItemsetMiner(tripList, columnHeaders);
-		fim.Mine(3, 1);
+		fim.Mine(absoluteMinSup, 1);
 		
 		
 		
