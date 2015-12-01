@@ -136,7 +136,7 @@ public CBAMiner_returnpackage buildMatrix(Map<String, Integer> freqDepartments){
 	public ArrayList<RuleItem> generateRules(){
 		ArrayList<RuleItem> rules = new ArrayList<RuleItem>();
 		Set<String> classes = _CBAmatrix.keySet();
-		Set<String> column_indices = _columnindex.keySet();
+		Set<String> column_indices = _columnindex_1.keySet();
 		
 		//loop through each row of matrix
 		for(String triptype : classes){
