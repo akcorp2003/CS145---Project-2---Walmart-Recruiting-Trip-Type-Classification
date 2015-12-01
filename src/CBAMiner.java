@@ -28,16 +28,18 @@ public class CBAMiner {
 		System.out.print("in process of building matrix\n");
 		Map<String, Integer> Departments = new HashMap<String, Integer>();
 		
-		//SHOULD BE ABLE TO REPLACE THIS WITH PASSED IN VALUE
+		//SHOULD BE ABLE TO REPLACE THIS WITH PASSED IN VALUE -> DONE
 		//get an idea of how many columns (departments) are in the dataset
-		for(String[] trip : _tripList){
-			String department = trip[5];
+		Set<String> freqDepartment_keys = freqDepartments.keySet();
+		for(String trip : freqDepartment_keys){
+			String department = trip;
 			if(!Departments.containsKey(department)){
 				Departments.put(department, 1);
 			}
 		}
 		
 		//get an idea of how many rows (triptype) are in the dataset
+		//we look back at the CSV file for this
 		Map<String, Integer> TripTypes = new HashMap<String, Integer>();
 		for(String[] trip : _tripList){
 			String triptype = trip[0];
@@ -47,9 +49,7 @@ public class CBAMiner {
 				
 		}
 		
-		//NEED TO FIX SO THAT BECOME SET<STRING> NOT SET<ARRAYLIST<STRING>>
 		Set<String> COLUMN = freqDepartments.keySet();
-		//Set<String> COLUMN = Departments.keySet();
 		Set<String> ROW = TripTypes.keySet();
 		
 		//begin building the matrix
@@ -81,9 +81,15 @@ public class CBAMiner {
 			if(_CBAmatrix.containsKey(trip[0])){
 				ArrayList<Integer> temp_triptype_row = _CBAmatrix.get(trip[0]);
 				//get index of the column
+				//some departments will be pruned out so it's possible that trip[5] will not be indexed
+				//and it's safe to ignore it
 				if(_columnindex.containsKey(trip[5])){
 					index = _columnindex.get(trip[5]);
 				}
+				else{
+					continue;
+				}
+				
 				if(temp_triptype_row.get(index) != 1){
 					temp_triptype_row.set(index, 1);
 				}
@@ -96,5 +102,29 @@ public class CBAMiner {
 		
 		
 		return CBAmatrix;
+	}
+	
+	/**
+	 * Verifies that for all classes in the matrix, there is at least a value of 1 in that class
+	 * @return
+	 */
+	public boolean checkMatrix(){
+		Set<String> classes = _CBAmatrix.keySet();
+		Set<String> column_indices = _columnindex.keySet();
+		
+		for(String triptype : classes){
+			ArrayList<Integer> triptype_row = _CBAmatrix.get(triptype);
+			//iterate through the row and check for 1
+			boolean one_exists = false;
+			for(Integer value : triptype_row){
+				if(value == 1)
+					one_exists = true;
+			}
+			if(!one_exists)
+				return false;
+			
+		}
+		
+		return true;
 	}
 }
