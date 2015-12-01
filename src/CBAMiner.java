@@ -17,6 +17,7 @@ public class CBAMiner {
 		_headers =headers;
 		_CBAmatrix = new HashMap<String, ArrayList<Integer>>();
 		_columnindex_1 = new HashMap<String, Integer>();
+		_columnindex_2 = new HashMap<Integer, String>();
 	}
 	
 	/**
