@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -104,11 +105,11 @@ public Map<Integer, ArrayList<ArrayList<String>>> buildMatrix(){
 		
 		//we now have our matrix!
 		CBAMiner_returnpackage CBAmatrix = new CBAMiner_returnpackage(_CBAmatrix, _columnindex_1, _columnindex_2);*/
-		int visitnumber = Integer.MIN_VALUE; //initialize to a ridiculous number
+		String visitnumber = "";
 		
 		for(String[] trip : _tripList){
 			int triptype = Integer.parseInt(trip[0]);
-			if(trip[1] == Integer.toString(visitnumber)){
+			if(trip[1].equals(visitnumber)){
 				if(_CBAmatrix.containsKey(triptype)){
 					//get the last arraylist since that is the arraylist we're currently inserting
 					ArrayList<ArrayList<String>> visit_row = _CBAmatrix.get(triptype);
@@ -130,11 +131,34 @@ public Map<Integer, ArrayList<ArrayList<String>>> buildMatrix(){
 			}
 			else {
 				//we're starting a new visitnumber
-				
+				visitnumber = trip[1];
+				if(_CBAmatrix.containsKey(triptype)){
+					//we'll need to build a new ArrayList<String> since it's a new trip!
+					ArrayList<ArrayList<String>> visit_row = _CBAmatrix.get(triptype);
+					ArrayList<String> new_working_row = new ArrayList<String>();
+					new_working_row.add(trip[5]);
+					visit_row.add(new_working_row);
+				}
+				else{
+					ArrayList<ArrayList<String>> new_triptype = new ArrayList<ArrayList<String>>();
+					ArrayList<String> new_row = new ArrayList<String>();
+					new_row.add(trip[5]);
+					new_triptype.add(new_row);
+					_CBAmatrix.put(triptype, new_triptype);
+				}
+			}//end else
+		}//end for
+		
+		
+		//the matrix is constructed, let's just sort everything in there
+		Set<Integer> working_triptype = _CBAmatrix.keySet();
+		for(Integer trip : working_triptype){
+			ArrayList<ArrayList<String>> visit_row = _CBAmatrix.get(trip);
+			for(ArrayList<String> row : visit_row){
+				Collections.sort(row);
 			}
 		}
-		
-		
+		//now we have our matrix constructed and sorted!
 		
 		return _CBAmatrix;
 	}

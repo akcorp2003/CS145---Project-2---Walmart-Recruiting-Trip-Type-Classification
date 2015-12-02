@@ -92,7 +92,7 @@ public class Entry {
 //		}
 		//ArrayList<ArrayList<String>> newlist = new ArrayList<ArrayList<String>>(keySet);
 		CBAMiner cba = new CBAMiner(tripList,columnHeaders);
-		cba.buildMatrix(freqDepartments);
+		cba.buildMatrix();
 		
 		System.out.print("generating rules\n");
 		ArrayList<RuleItem> possibleRuleItems = cba.generateRules();
