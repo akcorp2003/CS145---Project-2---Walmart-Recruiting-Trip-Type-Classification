@@ -152,7 +152,11 @@ public CBAMiner_returnpackage buildMatrix(Map<String, Integer> freqDepartments){
 					//rules.add(newRule);
 					Set<String> depts = new HashSet<String>();
 					depts.add(_columnindex_2.get(i));
+<<<<<<< HEAD
 					rules.add(new RuleItem(depts,triptype));
+=======
+					rules.add(new RuleItem(depts,Integer.parseInt(triptype)));
+>>>>>>> origin/master
 				}
 			}
 			
