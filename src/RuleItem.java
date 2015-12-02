@@ -3,11 +3,11 @@ import java.util.Set;
 public class RuleItem {
 	//keep track of departments, tripType, support, confidence
 	private Set<String> _departments;
-	private int _tripType;
+	private String _tripType;
 	private double _support;
 	private double _confidence;
 	
-	public RuleItem(Set<String> departments, int tripType){
+	public RuleItem(Set<String> departments, String tripType){
 		
 		_departments = departments;
 		_tripType = tripType;
@@ -36,7 +36,7 @@ public class RuleItem {
 		return _departments;
 	}
 
-	int getTripType()
+	String getTripType()
 	{
 		return _tripType;
 	}
