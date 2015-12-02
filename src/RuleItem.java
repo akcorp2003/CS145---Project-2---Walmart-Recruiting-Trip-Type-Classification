@@ -22,4 +22,22 @@ public class RuleItem {
 	void setConfidence(double confidence){
 		_confidence = confidence;
 	}
+	
+	double getSupport(){
+		return _support;
+	}
+
+	double getConfidence(){
+		return _confidence;
+	}
+
+	Set<String> getDepartments()
+	{
+		return _departments;
+	}
+
+	int getTripType()
+	{
+		return _tripType;
+	}
 }
