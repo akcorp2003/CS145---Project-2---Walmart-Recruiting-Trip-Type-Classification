@@ -8,28 +8,27 @@ public class CBAMiner {
 	
 	private ArrayList<String[]> _tripList;
 	private String[] _headers;
-	private Map<String, Integer> _columnindex_1; //provides an index of what columns represent in our matrix
-	private Map<Integer, String> _columnindex_2; //provides an index of what columns represent in our matrix
+	//private Map<String, Integer> _columnindex_1; //provides an index of what columns represent in our matrix
+	//private Map<Integer, String> _columnindex_2; //provides an index of what columns represent in our matrix
 	//private Map<String, Integer> _rowindex; //provides an index of what rows represent in our matrix
-	private Map<String, ArrayList<Integer>> _CBAmatrix; //the string is the row of the matrix and the ArrayList is the column
+	private Map<Integer, ArrayList<ArrayList<String>>> _CBAmatrix; //the key is the integer (triptype for our case), and the arraylist holds an arraylist for each visit associated to the key
 	
 	public CBAMiner(ArrayList<String[]> tripList, String[] headers){
 		_tripList = tripList;
 		_headers =headers;
-		_CBAmatrix = new HashMap<String, ArrayList<Integer>>();
-		_columnindex_1 = new HashMap<String, Integer>();
-		_columnindex_2 = new HashMap<Integer, String>();
+		_CBAmatrix = new HashMap<Integer, ArrayList<ArrayList<String>>>();
 	}
 	
 	/**
 	 * Builds the matrix for the _tripList ArrayList that was given to the class
+	 * Essentially builds the matrix from the raw data
 	 * @return A 2D array of the resulting matrix
 	 */
-public CBAMiner_returnpackage buildMatrix(Map<String, Integer> freqDepartments){
+public Map<Integer, ArrayList<ArrayList<String>>> buildMatrix(){
 		
 		//ArrayList<ArrayList<Integer>> CBAmatrix = new ArrayList<ArrayList<Integer>>();
 		System.out.print("in process of building matrix\n");
-		Map<String, Integer> Departments = new HashMap<String, Integer>();
+		/*Map<String, Integer> Departments = new HashMap<String, Integer>();
 		
 		//SHOULD BE ABLE TO REPLACE THIS WITH PASSED IN VALUE -> DONE
 		//get an idea of how many columns (departments) are in the dataset
@@ -104,10 +103,44 @@ public CBAMiner_returnpackage buildMatrix(Map<String, Integer> freqDepartments){
 		}
 		
 		//we now have our matrix!
-		CBAMiner_returnpackage CBAmatrix = new CBAMiner_returnpackage(_CBAmatrix, _columnindex_1, _columnindex_2);
+		CBAMiner_returnpackage CBAmatrix = new CBAMiner_returnpackage(_CBAmatrix, _columnindex_1, _columnindex_2);*/
+		int visitnumber = Integer.MIN_VALUE; //initialize to a ridiculous number
+		
+		for(String[] trip : _tripList){
+			int triptype = Integer.parseInt(trip[0]);
+			if(trip[1] == Integer.toString(visitnumber)){
+				if(_CBAmatrix.containsKey(triptype)){
+					//get the last arraylist since that is the arraylist we're currently inserting
+					ArrayList<ArrayList<String>> visit_row = _CBAmatrix.get(triptype);
+					int working_row_index = visit_row.size() - 1;
+					ArrayList<String> working_row = visit_row.get(working_row_index);
+					working_row.add(trip[5]); //insert the department name
+					//since all objects are references, java should have updated the working_row for us
+				}
+				else{
+					//this section may never be reached because if we are still working on the same visitnumber
+					//then triptype must exist in _CBAmatrix, this section is here just in case if it ever changes
+					//that a visitnumber will have 2 different triptypes
+					ArrayList<ArrayList<String>> new_triptype = new ArrayList<ArrayList<String>>();
+					ArrayList<String> new_row = new ArrayList<String>();
+					new_row.add(trip[5]);
+					new_triptype.add(new_row);
+					_CBAmatrix.put(triptype, new_triptype);
+				}
+			}
+			else {
+				//we're starting a new visitnumber
+				
+			}
+		}
 		
 		
-		return CBAmatrix;
+		
+		return _CBAmatrix;
+	}
+
+	public Map<Integer, ArrayList<ArrayList<String>>> get_CBAmatrix(){
+		return _CBAmatrix;
 	}
 
 	/**
@@ -115,7 +148,7 @@ public CBAMiner_returnpackage buildMatrix(Map<String, Integer> freqDepartments){
 	 * @return
 	 */
 	public boolean checkMatrix(){
-		Set<String> classes = _CBAmatrix.keySet();
+		/*Set<String> classes = _CBAmatrix.keySet();
 		Set<String> column_indices = _columnindex_1.keySet();
 		
 		for(String triptype : classes){
@@ -131,12 +164,14 @@ public CBAMiner_returnpackage buildMatrix(Map<String, Integer> freqDepartments){
 			
 		}
 		
-		return true;
+		return true;*/
+		return false;
 	}
 	
+	//CHANGE, EVERYTHING CHANGES
 	//generate size 1 possible rule items
 	public ArrayList<RuleItem> generateRules(){
-		ArrayList<RuleItem> rules = new ArrayList<RuleItem>();
+		/*ArrayList<RuleItem> rules = new ArrayList<RuleItem>();
 		Set<String> classes = _CBAmatrix.keySet();
 		Set<String> column_indices = _columnindex_1.keySet();
 		
@@ -156,8 +191,8 @@ public CBAMiner_returnpackage buildMatrix(Map<String, Integer> freqDepartments){
 				}
 			}
 			
-		}
-		return rules;
+		}*/
+		return null;
 	}
 	
 	public ArrayList<RuleItem> computeSupAndConf(ArrayList<RuleItem> possibleRules){
