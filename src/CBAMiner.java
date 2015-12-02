@@ -7,17 +7,29 @@ import java.util.Set;
 
 public class CBAMiner {
 	
+	private class Attribute{
+		public String department;
+		public int count;
+		
+		public Attribute(String department, int count){
+			this.department = department;
+			this.count = count;
+		}
+		
+	}
+	
+	
 	private ArrayList<String[]> _tripList;
 	private String[] _headers;
 	//private Map<String, Integer> _columnindex_1; //provides an index of what columns represent in our matrix
 	//private Map<Integer, String> _columnindex_2; //provides an index of what columns represent in our matrix
 	//private Map<String, Integer> _rowindex; //provides an index of what rows represent in our matrix
-	private Map<Integer, ArrayList<ArrayList<String>>> _CBAmatrix; //the key is the integer (triptype for our case), and the arraylist holds an arraylist for each visit associated to the key
+	private Map<Integer, ArrayList<ArrayList<Attribute>>> _CBAmatrix; //the key is the integer (triptype for our case), and the arraylist holds an arraylist for each visit associated to the key
 	
 	public CBAMiner(ArrayList<String[]> tripList, String[] headers){
 		_tripList = tripList;
 		_headers =headers;
-		_CBAmatrix = new HashMap<Integer, ArrayList<ArrayList<String>>>();
+		_CBAmatrix = new HashMap<Integer, ArrayList<ArrayList<Attribute>>>();
 	}
 	
 	/**
@@ -112,12 +124,26 @@ public Map<Integer, ArrayList<ArrayList<String>>> buildMatrix(){
 			if(trip[1].equals(visitnumber)){
 				if(_CBAmatrix.containsKey(triptype)){
 					//get the last arraylist since that is the arraylist we're currently inserting
-					ArrayList<ArrayList<String>> visit_row = _CBAmatrix.get(triptype);
+					ArrayList<ArrayList<Attribute>> visit_row = _CBAmatrix.get(triptype);
 					int working_row_index = visit_row.size() - 1;
-					ArrayList<String> working_row = visit_row.get(working_row_index);
-					if(!working_row.contains(trip[5])){
-						working_row.add(trip[5]); //insert the department name
+					ArrayList<Attribute> working_row = visit_row.get(working_row_index);
+					
+					boolean contains = false;
+					for(Attribute attribute : working_row){
+						if(attribute.department.equals(trip[5])){
+							attribute.count++;
+							contains = true;
+							break;
+						}
 					}
+					
+					if(!contains){
+						working_row.add(new Attribute(trip[5], 1));
+					}
+					
+					/*if(!working_row.contains(trip[5])){
+						working_row.add(trip[5]); //insert the department name
+					}*/
 					//we only want each department to appear once for every visit
 					
 					//since all objects are references, java should have updated the working_row for us
