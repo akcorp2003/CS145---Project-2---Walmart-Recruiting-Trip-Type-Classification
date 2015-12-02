@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -150,8 +151,8 @@ public CBAMiner_returnpackage buildMatrix(Map<String, Integer> freqDepartments){
 					//RuleItem newRule = newRuleTime(department,tripType);
 					//rules.add(newRule);
 					Set<String> depts = new HashSet<String>();
-					depts.add(_column_index_2.get(i));
-					rules.add(new RuleItem(depts,triptype));
+					depts.add(_columnindex_2.get(i));
+					rules.add(new RuleItem(depts,Integer.parseInt(triptype)));
 				}
 			}
 			
