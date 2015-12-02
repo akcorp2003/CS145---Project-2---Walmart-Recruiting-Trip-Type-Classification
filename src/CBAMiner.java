@@ -115,7 +115,11 @@ public Map<Integer, ArrayList<ArrayList<String>>> buildMatrix(){
 					ArrayList<ArrayList<String>> visit_row = _CBAmatrix.get(triptype);
 					int working_row_index = visit_row.size() - 1;
 					ArrayList<String> working_row = visit_row.get(working_row_index);
-					working_row.add(trip[5]); //insert the department name
+					if(!working_row.contains(trip[5])){
+						working_row.add(trip[5]); //insert the department name
+					}
+					//we only want each department to appear once for every visit
+					
 					//since all objects are references, java should have updated the working_row for us
 				}
 				else{
