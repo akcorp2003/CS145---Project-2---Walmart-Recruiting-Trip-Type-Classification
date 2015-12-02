@@ -7,18 +7,17 @@ import java.util.Set;
 
 public class CBAMiner {
 	
-	private class Attribute{
-		public String department;
-		public int count;
-		
-		public Attribute(String department, int count){
-			this.department = department;
-			this.count = count;
-		}
-		
+	/*
+	 *private class Attribute {
+	 *public String department;
+	public int count;
+	
+	public Attribute(String department, int count){
+		this.department = department;
+		this.count = count;
+	} 
 	}
-	
-	
+	 */
 	private ArrayList<String[]> _tripList;
 	private String[] _headers;
 	//private Map<String, Integer> _columnindex_1; //provides an index of what columns represent in our matrix
@@ -37,7 +36,7 @@ public class CBAMiner {
 	 * Essentially builds the matrix from the raw data
 	 * @return A 2D array of the resulting matrix
 	 */
-public Map<Integer, ArrayList<ArrayList<String>>> buildMatrix(){
+public Map<Integer, ArrayList<ArrayList<Attribute>>> buildMatrix(){
 		
 		//ArrayList<ArrayList<Integer>> CBAmatrix = new ArrayList<ArrayList<Integer>>();
 		System.out.print("in process of building matrix\n");
@@ -121,6 +120,9 @@ public Map<Integer, ArrayList<ArrayList<String>>> buildMatrix(){
 		
 		for(String[] trip : _tripList){
 			int triptype = Integer.parseInt(trip[0]);
+			if(trip[5].equals("NULL")){
+				continue; //there are some values in the training data where the department is null, ignore those
+			}
 			if(trip[1].equals(visitnumber)){
 				if(_CBAmatrix.containsKey(triptype)){
 					//get the last arraylist since that is the arraylist we're currently inserting
@@ -128,6 +130,7 @@ public Map<Integer, ArrayList<ArrayList<String>>> buildMatrix(){
 					int working_row_index = visit_row.size() - 1;
 					ArrayList<Attribute> working_row = visit_row.get(working_row_index);
 					
+					//find if the attribute object exists in the working row
 					boolean contains = false;
 					for(Attribute attribute : working_row){
 						if(attribute.department.equals(trip[5])){
@@ -152,9 +155,9 @@ public Map<Integer, ArrayList<ArrayList<String>>> buildMatrix(){
 					//this section may never be reached because if we are still working on the same visitnumber
 					//then triptype must exist in _CBAmatrix, this section is here just in case if it ever changes
 					//that a visitnumber will have 2 different triptypes
-					ArrayList<ArrayList<String>> new_triptype = new ArrayList<ArrayList<String>>();
-					ArrayList<String> new_row = new ArrayList<String>();
-					new_row.add(trip[5]);
+					ArrayList<ArrayList<Attribute>> new_triptype = new ArrayList<ArrayList<Attribute>>();
+					ArrayList<Attribute> new_row = new ArrayList<Attribute>();
+					new_row.add(new Attribute(trip[5], 1));
 					new_triptype.add(new_row);
 					_CBAmatrix.put(triptype, new_triptype);
 				}
@@ -163,16 +166,16 @@ public Map<Integer, ArrayList<ArrayList<String>>> buildMatrix(){
 				//we're starting a new visitnumber
 				visitnumber = trip[1];
 				if(_CBAmatrix.containsKey(triptype)){
-					//we'll need to build a new ArrayList<String> since it's a new trip!
-					ArrayList<ArrayList<String>> visit_row = _CBAmatrix.get(triptype);
-					ArrayList<String> new_working_row = new ArrayList<String>();
-					new_working_row.add(trip[5]);
+					//we'll need to build a new ArrayList<Attribute> since it's a new trip!
+					ArrayList<ArrayList<Attribute>> visit_row = _CBAmatrix.get(triptype);
+					ArrayList<Attribute> new_working_row = new ArrayList<Attribute>();
+					new_working_row.add(new Attribute(trip[5], 1));
 					visit_row.add(new_working_row);
 				}
 				else{
-					ArrayList<ArrayList<String>> new_triptype = new ArrayList<ArrayList<String>>();
-					ArrayList<String> new_row = new ArrayList<String>();
-					new_row.add(trip[5]);
+					ArrayList<ArrayList<Attribute>> new_triptype = new ArrayList<ArrayList<Attribute>>();
+					ArrayList<Attribute> new_row = new ArrayList<Attribute>();
+					new_row.add(new Attribute(trip[5], 1));
 					new_triptype.add(new_row);
 					_CBAmatrix.put(triptype, new_triptype);
 				}
@@ -180,20 +183,22 @@ public Map<Integer, ArrayList<ArrayList<String>>> buildMatrix(){
 		}//end for
 		
 		
-		//the matrix is constructed, let's just sort everything in there
+		//the matrix is constructed, let's jus t sort everything in there
+		//sorting could be a different monster with custom classes...
 		Set<Integer> working_triptype = _CBAmatrix.keySet();
 		for(Integer trip : working_triptype){
-			ArrayList<ArrayList<String>> visit_row = _CBAmatrix.get(trip);
-			for(ArrayList<String> row : visit_row){
-				Collections.sort(row);
+			ArrayList<ArrayList<Attribute>> visit_row = _CBAmatrix.get(trip);
+			for(ArrayList<Attribute> row : visit_row){
+				Collections.sort(row, new AttributeComparator());
 			}
 		}
+		//in the future, if anything funky happens when querying the attributes, it maybe because of this sort function...
 		//now we have our matrix constructed and sorted!
 		
 		return _CBAmatrix;
 	}
 
-	public Map<Integer, ArrayList<ArrayList<String>>> get_CBAmatrix(){
+	public Map<Integer, ArrayList<ArrayList<Attribute>>> get_CBAmatrix(){
 		return _CBAmatrix;
 	}
 
