@@ -25,10 +25,14 @@ public class CBAMiner {
 	//private Map<String, Integer> _rowindex; //provides an index of what rows represent in our matrix
 	private Map<Integer, ArrayList<ArrayList<Attribute>>> _CBAmatrix; //the key is the integer (triptype for our case), and the arraylist holds an arraylist for each visit associated to the key
 	
+	private Map<String, Integer> _DepartmentCountMap; //maps all the different departments to the total number of occurences of each department in the matrix
+	
 	public CBAMiner(ArrayList<String[]> tripList, String[] headers){
 		_tripList = tripList;
 		_headers =headers;
 		_CBAmatrix = new HashMap<Integer, ArrayList<ArrayList<Attribute>>>();
+		_DepartmentCountMap = new HashMap<String, Integer>();
+		
 	}
 	
 	/**
@@ -135,6 +139,7 @@ public Map<Integer, ArrayList<ArrayList<Attribute>>> buildMatrix(){
 					for(Attribute attribute : working_row){
 						if(attribute.department.equals(trip[5])){
 							attribute.count++;
+							AddDepartmentToMap(trip[5]);
 							contains = true;
 							break;
 						}
@@ -142,6 +147,7 @@ public Map<Integer, ArrayList<ArrayList<Attribute>>> buildMatrix(){
 					
 					if(!contains){
 						working_row.add(new Attribute(trip[5], 1));
+						AddDepartmentToMap(trip[5]);
 					}
 					
 					/*if(!working_row.contains(trip[5])){
@@ -159,6 +165,7 @@ public Map<Integer, ArrayList<ArrayList<Attribute>>> buildMatrix(){
 					ArrayList<Attribute> new_row = new ArrayList<Attribute>();
 					new_row.add(new Attribute(trip[5], 1));
 					new_triptype.add(new_row);
+					AddDepartmentToMap(trip[5]);
 					_CBAmatrix.put(triptype, new_triptype);
 				}
 			}
@@ -171,6 +178,7 @@ public Map<Integer, ArrayList<ArrayList<Attribute>>> buildMatrix(){
 					ArrayList<Attribute> new_working_row = new ArrayList<Attribute>();
 					new_working_row.add(new Attribute(trip[5], 1));
 					visit_row.add(new_working_row);
+					AddDepartmentToMap(trip[5]);
 				}
 				else{
 					ArrayList<ArrayList<Attribute>> new_triptype = new ArrayList<ArrayList<Attribute>>();
@@ -178,6 +186,7 @@ public Map<Integer, ArrayList<ArrayList<Attribute>>> buildMatrix(){
 					new_row.add(new Attribute(trip[5], 1));
 					new_triptype.add(new_row);
 					_CBAmatrix.put(triptype, new_triptype);
+					AddDepartmentToMap(trip[5]);
 				}
 			}//end else
 		}//end for
@@ -195,7 +204,21 @@ public Map<Integer, ArrayList<ArrayList<Attribute>>> buildMatrix(){
 		//in the future, if anything funky happens when querying the attributes, it maybe because of this sort function...
 		//now we have our matrix constructed and sorted!
 		
+		
+		//build the DepartmentCountMap
+		
+		
 		return _CBAmatrix;
+	}
+
+	//increments the count of a department in the DepartmentCountMap
+	private void AddDepartmentToMap(String department){
+		if(_DepartmentCountMap.containsKey(department)){
+			_DepartmentCountMap.put(department, _DepartmentCountMap.get(department)+1);
+		}
+		else{
+			_DepartmentCountMap.put(department, 1);
+		}
 	}
 
 	public Map<Integer, ArrayList<ArrayList<Attribute>>> get_CBAmatrix(){
@@ -256,9 +279,62 @@ public Map<Integer, ArrayList<ArrayList<Attribute>>> buildMatrix(){
 	
 	public ArrayList<RuleItem> computeSupAndConf(ArrayList<RuleItem> possibleRules){
 		//for each rule item 
-		for (RuleItem r : possibleRules){
+		int totalTripNumber = _tripList.size();
+		
+		
+		for (RuleItem rule : possibleRules){
 			//compute support and confidence of item sets 
 			//set support and confidence of rules
+			int supportNumerator = 0;
+			int supportDenominator = totalTripNumber;
+			int confidenceNumerator = 0;
+			int confidenceDenominator = _DepartmentCountMap.get(rule.getTripType());
+			
+			Set<String> departments = rule.getDepartments();
+			int numDepartments = departments.size();
+			//Set<Integer> tripTypes = _CBAmatrix.keySet();
+			
+			//to find the numerators
+			ArrayList<ArrayList<Attribute>> visitList = _CBAmatrix.get(Integer.parseInt(rule.getTripType()));
+			
+			for(ArrayList<Attribute> visit : visitList){
+				int departmentCount = 0;
+				int tempCount = 0;
+				
+				
+				/*for(String[] trip : _tripList){
+					if(trip[0].equals(rule.getTripType())){
+						
+					}
+				}*/
+				
+				
+				
+				//this section checks that all the departments in rule.getDepartments are present in this particular visit
+				for(Attribute attribute : visit){
+					for(String department : departments){
+						
+						if(attribute.department.equals(department)){
+							departmentCount++;
+							tempCount += attribute.count;
+						}
+						//if all departments are present
+						if(departmentCount == numDepartments){
+							supportNumerator = tempCount;
+							confidenceNumerator = tempCount;
+						}
+					}
+				}
+			}
+			
+			double support = (double)supportNumerator/supportDenominator;
+			double confidence = (double)confidenceNumerator/confidenceDenominator;
+			if(support>1 || confidence>1){
+				System.err.println("something bad happened");
+			}
+			rule.setSupport(support);
+			rule.setConfidence(confidence);
+			
 		}
 		return possibleRules;
 	}

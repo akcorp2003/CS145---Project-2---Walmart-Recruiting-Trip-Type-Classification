@@ -1,4 +1,6 @@
 
+
+
 public class Attribute {
 	public String department;
 	public int count;
@@ -7,4 +9,6 @@ public class Attribute {
 		this.department = department;
 		this.count = count;
 	}
+	
+	
 }
