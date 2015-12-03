@@ -302,21 +302,22 @@ public Map<Integer, ArrayList<ArrayList<Attribute>>> buildMatrix(){
 				int tempCount = 0;
 				
 				
-				/*for(String[] trip : _tripList){
-					if(trip[0].equals(rule.getTripType())){
-						
-					}
-				}*/
-				
+				int minSup = Integer.MAX_VALUE;
 				
 				
 				//this section checks that all the departments in rule.getDepartments are present in this particular visit
+				/* If there are 2+ departments, checks that each department is present in the visit, then takes the minimum 
+				 * count of those two departments to the as the support
+				 */
 				for(Attribute attribute : visit){
 					for(String department : departments){
 						
 						if(attribute.department.equals(department)){
 							departmentCount++;
-							tempCount += attribute.count;
+							
+							if(attribute.count < minSup){
+								tempCount = attribute.count;
+							}
 						}
 						//if all departments are present
 						if(departmentCount == numDepartments){
