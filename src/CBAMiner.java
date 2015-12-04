@@ -262,6 +262,7 @@ public Map<Integer, ArrayList<ArrayList<Attribute>>> buildMatrix(){
 	public ArrayList<RuleItem> generateRules(){
 		ArrayList<RuleItem> rules = new ArrayList<RuleItem>();
 		Set<Integer> classes = _CBAmatrix.keySet();
+		RuleItem rule;
 		//loop through each row of matrix
 		for(int triptype : classes){
 			ArrayList<ArrayList<Attribute>> triptype_row = _CBAmatrix.get(triptype);
@@ -272,7 +273,9 @@ public Map<Integer, ArrayList<ArrayList<Attribute>>> buildMatrix(){
 					if(attr.count > 0){
 						Set<String> depts = new HashSet<String>();
 						depts.add(attr.department);
-						rules.add(new RuleItem(depts,Integer.toString(triptype)));
+						rule = new RuleItem(depts,Integer.toString(triptype));
+						if (rules.contains(rule) == false)
+							rules.add(new RuleItem(depts,Integer.toString(triptype)));
 					}
 				}
 			}
