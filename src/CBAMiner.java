@@ -313,6 +313,18 @@ public Map<Integer, ArrayList<ArrayList<Attribute>>> buildMatrix(){
 		return outputRules;
 	}
 	
+	public ArrayList<RuleItem> pruneInfrequentRules(ArrayList<RuleItem> generatedRules){
+		int minSup = .2; //can set to whtvr value we want
+		int minConf = .3;
+		for (RuleItem rule: generatedRules){
+			//if don't pass minimum support or minimum confidence
+			if ((rule.getSupport() < minSup) || (rule.getConfidence() < minConf)){
+				//remove from list
+				generatedRules.remove(rule);
+			}
+		}
+	}
+	
 	public ArrayList<RuleItem> computeSupAndConf(ArrayList<RuleItem> possibleRules){
 		//for each rule item 
 		int totalTripNumber = _tripList.size();

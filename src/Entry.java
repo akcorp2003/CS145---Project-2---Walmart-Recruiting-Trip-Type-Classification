@@ -73,7 +73,7 @@ public class Entry {
 		//int absoluteMinSup = (int)( Math.round(minSup*tripList.size()));
 		
 		//find frequent departments
-		int absoluteMinSup = (int) (Math.round(minSup * 95675));//hard coded as number of distinct visits
+		/*int absoluteMinSup = (int) (Math.round(minSup * 95675));//hard coded as number of distinct visits
 		System.out.print("absoluteMinSup: ");
 		System.out.print(absoluteMinSup);
 		System.out.print("\n");
@@ -81,7 +81,7 @@ public class Entry {
 		Map<String, Integer> freqDepartments= fim.Mine(absoluteMinSup, 1);
 		System.out.print("num of departments: ");
 		System.out.print(freqDepartments.size());
-		System.out.print("\n");
+		System.out.print("\n");*/
 		
 		//generate grid to make rules
 		System.out.print("making matrix!\n");
@@ -91,12 +91,40 @@ public class Entry {
 //			list.add((ArrayList<String[]>)type);
 //		}
 		//ArrayList<ArrayList<String>> newlist = new ArrayList<ArrayList<String>>(keySet);
+		
+		//Read in data from csv file and organize in map
 		CBAMiner cba = new CBAMiner(tripList,columnHeaders);
 		cba.buildMatrix();
 		
+		//generate size 1 candidate rule items, calculate support and confidence
+		//and prune infrequent
 		System.out.print("generating rules\n");
 		ArrayList<RuleItem> possibleRuleItems = cba.generateRules();
 		possibleRuleItems = cba.computeSupAndConf(possibleRuleItems);
+		possibleRuleItems = cba.pruneInfrequentRules(possibleRuleItems);
+		
+		//generate new rules of larger size
+		int n = 2;
+		ArrayList<RuleItem> newRules = cba.generateRulesFromCandidates(possibleRuleItems,n);
+		//there are still new rules being generated
+		while (newRules.size() != 0 ){
+			n= n +1;
+			newRules = cba.computeSupAndConf(newRules);
+			newRules = cba.pruneInfrequentRules(newRules);
+			possibleRuleItems.addAll(newRules);
+			newRules = cba.generateRulesFromCandidates(newRules,n);
+		}
+		
+		//so all rules combined in possibleRuleItems, now sort by confidence, support, then order of generation
+		RuleSorter ruleSorter = new RuleSorter(possibleRuleItems);
+		ruleSorter.Sort();
+		
+		//here add function of generating classifiers
+		
+		//then read in test data set and compare to classifiers
+		// need way to write probabilities into csv file
+		// then we are DONE!
+	
 	}
 
 }
