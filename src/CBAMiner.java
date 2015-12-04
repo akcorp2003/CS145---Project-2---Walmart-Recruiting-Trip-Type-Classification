@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -336,13 +337,17 @@ public Map<Integer, ArrayList<ArrayList<Attribute>>> buildMatrix(){
 	 * @return The original ArrayList but potentially with rules removed.
 	 */
 	public ArrayList<RuleItem> pruneInfrequentRules(ArrayList<RuleItem> generatedRules){
-		double minSup = 6/28; //can set to whatever value we want
+		double minSup = (double)6/28; //can set to whatever value we want
 		double minConf = 0.3;
-		for (RuleItem rule: generatedRules){
+		ArrayList<RuleItem> gr_temp = generatedRules;
+		for (Iterator<RuleItem> rule = generatedRules.iterator(); rule.hasNext(); ){/*RuleItem: gr_temp*///){
 			//if don't pass minimum support or minimum confidence
-			if ((rule.getSupport() < minSup) || (rule.getConfidence() < minConf)){
+			RuleItem curr_rule = rule.next();
+			if ((curr_rule.getSupport() < minSup) || (curr_rule.getConfidence() < minConf)){
 				//remove from list
-				generatedRules.remove(rule);
+				//gr_temp.remove(rule); illegal in Java
+				rule.remove();
+				
 			}
 		}
 		return generatedRules;
