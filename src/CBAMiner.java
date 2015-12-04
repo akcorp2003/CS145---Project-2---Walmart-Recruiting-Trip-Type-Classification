@@ -278,7 +278,7 @@ public Map<Integer, ArrayList<ArrayList<Attribute>>> buildMatrix(){
 			}
 			
 		}
-		return null;
+		return rules;
 	}
 	
 	//generate n+1-rules from n-candidates
@@ -361,8 +361,16 @@ public Map<Integer, ArrayList<ArrayList<Attribute>>> buildMatrix(){
 			int supportNumerator = 0;
 			int supportDenominator = totalTripNumber;
 			int confidenceNumerator = 0;
-			int confidenceDenominator = _DepartmentCountMap.get(rule.getTripType());
+			int confidenceDenominator = 0;
 			
+			int min = Integer.MAX_VALUE;
+			for(String dmp : rule.getDepartments()){
+				int tempSup = _DepartmentCountMap.get(dmp);
+				if(tempSup < min){
+					min = tempSup;
+				}
+			}
+			confidenceDenominator = min;
 			Set<String> departments = rule.getDepartments();
 			int numDepartments = departments.size();
 			//Set<Integer> tripTypes = _CBAmatrix.keySet();
@@ -394,8 +402,8 @@ public Map<Integer, ArrayList<ArrayList<Attribute>>> buildMatrix(){
 						}
 						//if all departments are present
 						if(departmentCount == numDepartments){
-							supportNumerator = tempCount;
-							confidenceNumerator = tempCount;
+							supportNumerator += tempCount;
+							confidenceNumerator += tempCount;
 						}
 					}
 				}

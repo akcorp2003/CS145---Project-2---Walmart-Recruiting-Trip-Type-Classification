@@ -20,7 +20,7 @@ public class Entry {
 		String filename = args[0]; 
 		double minSup = -1;
 		try{
-			minSup = Double.parseDouble(args[1]);
+			minSup = Double.parseDouble(args[2]);
 		}
 		catch(NumberFormatException e){
 			System.err.println("Error: Please specify a numerical value for minSup");
