@@ -1,0 +1,70 @@
+1 Rule Item Candidates:
+SHOES —> 2
+GROCERIES —> 2
+CANDY —>2
+SEASONAL —>2
+TOYS —>2
+
+Support:
+SHOES —> 2 = 3/28
+GROCERIES —> 2 = 2/28
+CANDY —>2 = 8/28
+SEASONAL —>2 = 8/28
+TOYS —>2 = 6/28
+
+Confidence:
+SHOES —> 2 = 3/3
+GROCERIES —> 2 = 2/2
+CANDY —>2 = 8/8
+SEASONAL —>2 = 8/8
+TOYS —>2 = 6/6
+
+min sup = 6/28
+min conf = 60% (ignore conf because only one trip type in this example)
+
+Frequent 1 Rule Items:
+CANDY —>2
+SEASONAL —>2
+TOYS —>2
+
+2 Rule Item Candidates:
+CANDY, SEASONAL  —> 2
+CANDY, TOYS  —> 2
+TOYS, SEASONAL  —> 2
+
+Support:
+CANDY, SEASONAL  —> 2 = 7/28
+CANDY, TOYS  —> 2 = 6/28
+TOYS, SEASONAL  —> 2 = 6/28
+
+Frequent 2 Rule Items:
+CANDY, SEASONAL  —> 2
+CANDY, TOYS  —> 2
+TOYS, SEASONAL  —> 2
+
+3 Rule Item Candidates:
+CANDY, SEASONAL,TOYS  —> 2
+
+Support:
+CANDY, SEASONAL,TOYS  —> 2 = 6/28
+
+Frequent 3 Rule Items:
+CANDY, SEASONAL,TOYS  —> 2
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Rules :
+CANDY —>2
+SEASONAL —>2
+TOYS —>2
+CANDY, SEASONAL  —> 2
+CANDY, TOYS  —> 2
+TOYS, SEASONAL  —> 2
+CANDY, SEASONAL,TOYS  —> 2
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Classifiers: 
+CANDY
+SEASONAL
+CANDY,SEASONAL
+TOYS
+CANDY,TOYS
+TOYS,SEASONAL
+CANDY,SEASONAL,TOYS
