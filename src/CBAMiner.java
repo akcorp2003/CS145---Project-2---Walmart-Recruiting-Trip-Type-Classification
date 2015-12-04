@@ -333,7 +333,7 @@ public Map<Integer, ArrayList<ArrayList<Attribute>>> buildMatrix(){
 	 * @return The original ArrayList but potentially with rules removed.
 	 */
 	public ArrayList<RuleItem> pruneInfrequentRules(ArrayList<RuleItem> generatedRules){
-		double minSup = 0.2; //can set to whatever value we want
+		double minSup = 6/28; //can set to whatever value we want
 		double minConf = 0.3;
 		for (RuleItem rule: generatedRules){
 			//if don't pass minimum support or minimum confidence
@@ -399,14 +399,15 @@ public Map<Integer, ArrayList<ArrayList<Attribute>>> buildMatrix(){
 							if(attribute.count < minSup){
 								tempCount = attribute.count;
 							}
-						}
-						//if all departments are present
-						if(departmentCount == numDepartments){
-							supportNumerator += tempCount;
-							confidenceNumerator += tempCount;
-						}
-					}
-				}
+							//if all departments are present
+							if(departmentCount == numDepartments){
+								supportNumerator += tempCount;
+								confidenceNumerator += tempCount;
+							}
+						}//end if
+						
+					}//end department : departments for
+				}//end attribute : visit for
 			}
 			
 			double support = (double)supportNumerator/supportDenominator;
