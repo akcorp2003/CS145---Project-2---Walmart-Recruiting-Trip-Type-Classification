@@ -253,28 +253,64 @@ public Map<Integer, ArrayList<ArrayList<Attribute>>> buildMatrix(){
 	//CHANGE, EVERYTHING CHANGES
 	//generate size 1 possible rule items
 	public ArrayList<RuleItem> generateRules(){
-		/*ArrayList<RuleItem> rules = new ArrayList<RuleItem>();
-		Set<String> classes = _CBAmatrix.keySet();
-		Set<String> column_indices = _columnindex_1.keySet();
-		
+		ArrayList<RuleItem> rules = new ArrayList<RuleItem>();
+		Set<Integer> classes = _CBAmatrix.keySet();
 		//loop through each row of matrix
-		for(String triptype : classes){
-			ArrayList<Integer> triptype_row = _CBAmatrix.get(triptype);
+		for(int triptype : classes){
+			ArrayList<ArrayList<Attribute>> triptype_row = _CBAmatrix.get(triptype);
 			//iterate through the row and check for 1
-			for(int i = 0; i < triptype_row.size(); i++){
+			for(ArrayList<Attribute> visitList : triptype_row){
 				//if 1, create a rule item and add to arraylist
-				if(triptype_row.get(i) == 1){
-					//need way to get department via column_indices
-					//RuleItem newRule = newRuleTime(department,tripType);
-					//rules.add(newRule);
-					Set<String> depts = new HashSet<String>();
-					depts.add(_columnindex_2.get(i));
-					rules.add(new RuleItem(depts,triptype));
+				for(Attribute attr : visitList){	
+					if(attr.count > 0){
+						Set<String> depts = new HashSet<String>();
+						depts.add(attr.department);
+						rules.add(new RuleItem(depts,triptype.toString()));
+					}
 				}
 			}
 			
-		}*/
+		}
 		return null;
+	}
+	
+	//generate n+1-rules from n-candidates
+	public ArrayList<RuleItem> generateRulesFromCandidates(ArrayList<RuleItem> prevRules, int n){
+		
+		ArrayList<Set<RuleItem>> potentials = new ArrayList<RuleItem>();
+		ArrayList<Integer> counts = new ArrayList<Integer>();
+		for (int i = 0; i < prevRules.size(); i++){
+			for (int j = i + 1; j < prevRules.size(); j++){
+				RuleItem rule1 = prevRules.get(i);
+				RuleItem rule2 = prevRules.get(j);
+				if(!rule1.getTripType().equals(rule2.getTripType()))
+					continue;
+				String tripType = rule1.getTripType();
+				Set<String> union = new HashSet<String>(rule1.getDepartments());
+				union.addAll(rule2.getDepartments());
+				if(union.size() == n + 1){
+					boolean found = false;
+					for (int i = 0; i < counts.size(); i++){
+						if (potentials.get(i).getDepartments().equals(union) &&
+								potentials.get(i).getTripType().equals(tripType)){
+							counts.set(i,counts.get(i) + 1);
+							found = true;
+						}
+					}
+					if (!found){
+						potentials.add(new RuleItem(union,tripType));
+						counts.add(1);
+					}
+				}
+			}
+		}
+		ArrayList<RuleItem> outputRules = new ArrayList<RuleItem>();
+		for (int i = 0; i < counts.size(); i++){
+			if(counts.get(i) == (n * (n+1) / 2)){
+				outputRules.add(potentials.get(i));
+			}
+		}
+		return outputRules;
 	}
 	
 	public ArrayList<RuleItem> computeSupAndConf(ArrayList<RuleItem> possibleRules){
