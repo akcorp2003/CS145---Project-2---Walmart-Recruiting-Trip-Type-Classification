@@ -12,8 +12,8 @@ public class Entry {
 	
 	public static void main(String[] args){
 		
-		if(args.length < 2){
-			System.err.println("Error: Please specify filename and minSup where 0<=minSup<=1");
+		if(args.length < 3){
+			System.err.println("Error: Please specify filename of training, filename of test data, and minSup where 0<=minSup<=1");
 			System.exit(1);
 		}
 		
@@ -33,7 +33,7 @@ public class Entry {
 		}
 		
 		System.out.print("reading in file\n");
-		BufferedReader br = null;
+		/*BufferedReader br = null;
 		String line = "";
 		String delimiter = ",";
 		ArrayList<String[]> tripList = new ArrayList<String[]>();
@@ -63,7 +63,10 @@ public class Entry {
 					e.printStackTrace();
 				}
 			}
-		}
+		}*/
+		CSVfile_returnpackage CSVcontents = CSVfileReader(filename);
+		ArrayList<String[]> tripList = CSVcontents.get_visitsArrayList();
+		String[] columnHeaders = CSVcontents.get_columnHeaders();
 		System.out.print("done reading\n");
 		//int j = 0;
 		
@@ -123,8 +126,55 @@ public class Entry {
 		
 		//then read in test data set and compare to classifiers
 		// need way to write probabilities into csv file
+		CSVfile_returnpackage CSVcontents_test = CSVfileReader(args[1]);
+		testdata_formatter test_f = new testdata_formatter(CSVcontents_test.get_visitsArrayList(), CSVcontents_test.get_columnHeaders());
+		ArrayList<Set<String>> test_departments = test_f.format_visits();
+		//each index in the ArrayList represents an individual visit
+		//inside the Set<String> holds the departments that were purchased from that visit
+		//I imagine iterating through test_departments and for each loop, generate the probabilities and write those out
+		//to an appropriate CSV file
+		
 		// then we are DONE!
 	
+	}
+	
+	public static CSVfile_returnpackage CSVfileReader(String filename){
+		
+		BufferedReader br = null;
+		String line = "";
+		String delimiter = ",";
+		ArrayList<String[]> tripList = new ArrayList<String[]>();
+		String[] columnHeaders = null;
+				
+		try {
+
+			br = new BufferedReader(new FileReader(filename));
+			line = br.readLine(); //skip the first line that contains the titles of the columns.
+			columnHeaders = line.split(delimiter);
+			while ((line = br.readLine()) != null) {
+
+			        // use comma as separator
+				String[] trip = line.split(delimiter);
+				tripList.add(trip);
+			}
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}//end finally
+		
+		CSVfile_returnpackage contents = new CSVfile_returnpackage(tripList, columnHeaders);
+		
+		return contents;
 	}
 
 }
