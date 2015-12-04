@@ -265,7 +265,7 @@ public Map<Integer, ArrayList<ArrayList<Attribute>>> buildMatrix(){
 					if(attr.count > 0){
 						Set<String> depts = new HashSet<String>();
 						depts.add(attr.department);
-						rules.add(new RuleItem(depts,triptype.toString()));
+						rules.add(new RuleItem(depts,Integer.toString(triptype)));
 					}
 				}
 			}
@@ -277,7 +277,7 @@ public Map<Integer, ArrayList<ArrayList<Attribute>>> buildMatrix(){
 	//generate n+1-rules from n-candidates
 	public ArrayList<RuleItem> generateRulesFromCandidates(ArrayList<RuleItem> prevRules, int n){
 		
-		ArrayList<Set<RuleItem>> potentials = new ArrayList<RuleItem>();
+		ArrayList<RuleItem> potentials = new ArrayList<RuleItem>();
 		ArrayList<Integer> counts = new ArrayList<Integer>();
 		for (int i = 0; i < prevRules.size(); i++){
 			for (int j = i + 1; j < prevRules.size(); j++){
@@ -290,10 +290,10 @@ public Map<Integer, ArrayList<ArrayList<Attribute>>> buildMatrix(){
 				union.addAll(rule2.getDepartments());
 				if(union.size() == n + 1){
 					boolean found = false;
-					for (int i = 0; i < counts.size(); i++){
-						if (potentials.get(i).getDepartments().equals(union) &&
-								potentials.get(i).getTripType().equals(tripType)){
-							counts.set(i,counts.get(i) + 1);
+					for (int x = 0; x < counts.size(); x++){
+						if (potentials.get(x).getDepartments().equals(union) &&
+								potentials.get(x).getTripType().equals(tripType)){
+							counts.set(x,counts.get(x) + 1);
 							found = true;
 						}
 					}
