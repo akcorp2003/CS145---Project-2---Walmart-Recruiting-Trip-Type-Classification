@@ -40,4 +40,36 @@ public class RuleItem {
 	{
 		return _tripType;
 	}
+	
+	@Override
+    	public boolean equals(Object object)
+    	{
+		if (this == null || object == null)
+			return false;
+
+		Set<String> depts;
+		Set<String> depts2;
+		RuleItem rule;
+		if (object instanceof RuleItem)
+		{
+			rule = (RuleItem) object;
+			if ((this.getTripType()).equals(rule.getTripType()))
+			{
+				depts = this.getDepartments();
+				depts2 = rule.getDepartments();
+				for (String dept : depts)
+					if (depts2.contains(dept) == false)
+						return false;
+
+				for (String dept2 : depts2)
+					if (depts.contains(dept2) == false)
+						return false;
+				return true;
+			}
+			else
+				return false;
+		}
+		else
+			return false;
+    	}
 }
