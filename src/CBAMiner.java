@@ -300,44 +300,49 @@ public Map<Integer, ArrayList<ArrayList<Attribute>>> buildMatrix(){
 				
 				RuleItem rule1 = prevRules.get(i);
 				RuleItem rule2 = prevRules.get(j);
-				
+				ArrayList<String> departments1 = prevRules.get(i).getDepartmentsAsArray();
+				ArrayList<String> departments2 = prevRules.get(j).getDepartmentsAsArray();
+				if(rule1.getTripType().equals(rule2.getTripType())){
 				//for length 2 candidates
-				if(n == 2){
-					if(rule1.getTripType().equals(rule2.getTripType())){
-						String cand1 = rule1.getDepartmentsAsArray().get(0);
-						String cand2 = rule2.getDepartmentsAsArray().get(0);
+					if(n == 2){
 						
-						//check that the two candidates are not part of the same attribute
-						//as a trip cannot possible contain two values from the same attribute
-	//					if(!_attributeMap.get(cand1).equals(_attributeMap.get(cand2))){
-	//						ArrayList<String> newList = new ArrayList<String>();
-	//						newList.add(cand1);
-	//						newList.add(cand2);
-	//						selfJoin.add(newList);
-			//			}
-						Set<String> newList = new HashSet<String>();
-						newList.add(cand1);
-						newList.add(cand2);
-						selfJoin.add(new RuleItem(newList, rule1.getTripType()));
-					}
-				}
-				else{
-					boolean same = true;
-					for(int k = 0; k < n-2; k++){
-						
-						if(rule1.getDepartmentsAsArray().get(k) != rule2.getDepartmentsAsArray().get(k)){
-							same = false;
-						}
+							String cand1 = departments1.get(0);
+							String cand2 = departments2.get(0);
+							
+							//check that the two candidates are not part of the same attribute
+							//as a trip cannot possible contain two values from the same attribute
+		//					if(!_attributeMap.get(cand1).equals(_attributeMap.get(cand2))){
+		//						ArrayList<String> newList = new ArrayList<String>();
+		//						newList.add(cand1);
+		//						newList.add(cand2);
+		//						selfJoin.add(newList);
+				//			}
+							Set<String> newList = new HashSet<String>();
+							newList.add(cand1);
+							newList.add(cand2);
+							selfJoin.add(new RuleItem(newList, rule1.getTripType()));
 						
 					}
-					if(same){
-						Set<String> newList = new HashSet<String>();
+					else{
+						
+						boolean same = true;
 						for(int k = 0; k < n-2; k++){
-							newList.add(rule1.getDepartmentsAsArray().get(k));
+							
+							if(departments1.get(k) != departments2.get(k)){
+								same = false;
+								break;
+							}
+							
 						}
-						newList.add(rule1.getDepartmentsAsArray().get(n-2));
-						newList.add(rule2.getDepartmentsAsArray().get(n-2));
-						selfJoin.add(new RuleItem(newList, rule2.getTripType()));
+						if(same){
+							Set<String> newList = new HashSet<String>();
+							for(int k = 0; k < n-2; k++){
+								newList.add(departments1.get(k));
+							}
+							newList.add(departments1.get(n-2));
+							newList.add(departments2.get(n-2));
+							selfJoin.add(new RuleItem(newList, rule2.getTripType()));
+						}
 					}
 				}
 			}
