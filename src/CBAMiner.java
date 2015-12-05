@@ -478,9 +478,7 @@ public Map<Integer, ArrayList<ArrayList<Attribute>>> buildMatrix(){
 			
 			double support = (double)supportNumerator/supportDenominator;
 			double confidence = (double)confidenceNumerator/confidenceDenominator;
-			if(support>1 || confidence>1){
-				System.err.println("something bad happened");
-			}
+		
 			rule.setSupport(support);
 			rule.setConfidence(confidence);
 			
