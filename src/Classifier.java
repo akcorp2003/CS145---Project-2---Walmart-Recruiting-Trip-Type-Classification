@@ -40,6 +40,8 @@ public class Classifier
 				System.out.print(temp.get(i) + " ");
 			System.out.println("" + _classifier.get(temp));
 		}
+		System.out.println("default: " + _default);
+		System.out.println("accuracy: " + _accuracy);
 	}
 
 	private void addDefault()
@@ -51,6 +53,7 @@ public class Classifier
 		ArrayList<Integer> visitList;
 		int max = 0;
 		int maxTrip = 999;
+		double acc = 0.0;
 
 		numTripTypes = _tripTypes.size();
 
@@ -65,6 +68,8 @@ public class Classifier
 			{
 				if (visitList.get(i) == 0)
 					count++;
+				else
+					acc += 1.0;
 			}
 			if (count > max) 
 			{
@@ -73,6 +78,7 @@ public class Classifier
 			}
 		}	
 		_default = maxTrip;
+		_accuracy = acc / _accuracy;
 	}
 
 	private void fill()
