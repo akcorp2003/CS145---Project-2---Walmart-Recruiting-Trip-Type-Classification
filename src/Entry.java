@@ -117,6 +117,7 @@ public class Entry {
 			possibleRuleItems.addAll(newRules);
 			newRules = cba.generateRulesFromCandidates(newRules,n);
 		}
+		possibleRuleItems = cba.pruneInfrequentRules(possibleRuleItems,0);
 		
 		//so all rules combined in possibleRuleItems, now sort by confidence, support, then order of generation
 		RuleSorter ruleSorter = new RuleSorter(possibleRuleItems);
