@@ -223,6 +223,10 @@ public class Entry {
 			int index = 0;
 			ArrayList<String> dataline = new ArrayList<String>();
 			for (Map<Integer, Double> visit_predictions : predicted_data) {
+				
+				//first we need to get the visit number we are currently working on
+				//we need this because the [0] entry of the CSV file contains the trip number
+				//this can be found by querying the map
 				if (testdata_indextovisitno.containsKey(index)) {
 					int visitno = testdata_indextovisitno.get(index);
 					String visitno_s = Integer.toString(visitno);
