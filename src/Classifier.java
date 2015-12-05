@@ -212,7 +212,7 @@ public class Classifier
 				if (apply == 1)
 				{
 					count++;
-					tripType = _classifier.get(ait);
+					tripType = _classifier.get(cond);
 					if (prob.containsKey(tripType))
 						prob.put(tripType, prob.get(tripType) + 1);
 					else
@@ -230,6 +230,7 @@ public class Classifier
 			if (prob.isEmpty())
 				prob.put(_default, 1.0);
 			tripTypeProb.add(prob);
+			count = 0;
 		}
 
 		return tripTypeProb;
