@@ -308,6 +308,7 @@ public Map<Integer, ArrayList<ArrayList<Attribute>>> buildMatrix(){
 				if(union.size() == n + 1){
 					boolean found = false;
 					for (int x = 0; x < counts.size(); x++){
+						//what's this supposed to check for?
 						if (potentials.get(x).getDepartments().equals(union) &&
 								potentials.get(x).getTripType().equals(tripType)){
 							counts.set(x,counts.get(x) + 1);
@@ -323,6 +324,7 @@ public Map<Integer, ArrayList<ArrayList<Attribute>>> buildMatrix(){
 		}
 		ArrayList<RuleItem> outputRules = new ArrayList<RuleItem>();
 		for (int i = 0; i < counts.size(); i++){
+			//what's this magic formula?? It seems to be prohibiting our rules to get inserted into the output...
 			if(counts.get(i) == (n * (n+1) / 2)){
 				outputRules.add(potentials.get(i));
 			}

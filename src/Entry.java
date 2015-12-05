@@ -104,7 +104,7 @@ public class Entry {
 		System.out.print("generating rules\n");
 		ArrayList<RuleItem> possibleRuleItems = cba.generateRules();
 		possibleRuleItems = cba.computeSupAndConf(possibleRuleItems);
-		possibleRuleItems = cba.pruneInfrequentRules(possibleRuleItems);
+		possibleRuleItems = cba.pruneInfrequentRules(possibleRuleItems,1);
 		
 		//generate new rules of larger size
 		int n = 2;
@@ -113,7 +113,7 @@ public class Entry {
 		while (newRules.size() != 0 ){
 			n= n +1;
 			newRules = cba.computeSupAndConf(newRules);
-			newRules = cba.pruneInfrequentRules(newRules);
+			newRules = cba.pruneInfrequentRules(newRules,1);
 			possibleRuleItems.addAll(newRules);
 			newRules = cba.generateRulesFromCandidates(newRules,n);
 		}
