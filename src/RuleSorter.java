@@ -95,7 +95,78 @@ public class RuleSorter {
 			}
 		}
 	}
+	
+	private int partitionPart(ArrayList<RuleItem> rules, int left, int right)
+	{
+		int i = left;
+		int j = right;
+		RuleItem tmp;
+		double pivot;
 
+		pivot = ((rules.get((left + right) / 2)).getDepartments()).size();
+
+		while (i <= j)
+		{
+			while ( ((rules.get(i)).getDepartments()).size() < pivot)
+				i++;
+			while ( ((rules.get(j)).getDepartments()).size() > pivot)
+				j--;
+
+			if (i <= j) 
+			{
+				tmp = rules.get(i);
+				rules.set(i, rules.get(j));
+				rules.set(j, tmp);
+				i++;
+				j--;
+			}
+		}
+		return i;
+	}
+
+	private void quickSortPart(ArrayList<RuleItem> rules, int left, int right)
+	{
+		int index = 0;
+		index = partitionPart(rules,left,right);
+		if (left < index - 1)
+			quickSortPart(rules, left, index - 1);
+		if (index < right)
+			quickSortPart(rules, index, right);
+	}
+
+	private void quickSortGenOrder(ArrayList<RuleItem> rules)
+	{
+		int len = rules.size();
+		int i,count = 0;
+		RuleItem cur;
+		RuleItem prev;
+
+		prev = rules.get(0);
+		for (i = 1; i < len; i++)
+		{
+			cur = rules.get(i);
+			if (cur.getConfidence() == prev.getConfidence())
+			{
+				if (cur.getSupport() == prev.getSupport())
+				{
+					if (i == len - 1)
+						quickSortPart(rules,count,i);
+				}
+				else
+				{
+					quickSortPart(rules, count,i-1);
+					count = i;
+				}
+			}
+			else
+			{
+				quickSortPart(rules, count,i-1);
+				count = i;
+			}
+			prev = cur;
+		}
+	}
+	
 	public ArrayList<RuleItem> Sort()
 	{
 		ArrayList<RuleItem> rules = new ArrayList<RuleItem>();
@@ -107,7 +178,8 @@ public class RuleSorter {
 
 		quickSort(rules,0,0, len - 1);
 		quickSort(rules,1,0, len - 1);
-
+		quickSortGenOrder(rules);
+		
 		return rules;
 	}
 }
