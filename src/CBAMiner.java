@@ -396,7 +396,7 @@ public Map<Integer, ArrayList<ArrayList<Attribute>>> buildMatrix(){
 		double minSup = (double)6/28; //can set to whatever value we want
 		double minConf = 0.3;
 		if (flag == 1)
-			minConf = 1000.0;
+			minConf = 0.0;
 		ArrayList<RuleItem> gr_temp = generatedRules;
 		for (Iterator<RuleItem> rule = generatedRules.iterator(); rule.hasNext(); ){/*RuleItem: gr_temp*///){
 			//if don't pass minimum support or minimum confidence
