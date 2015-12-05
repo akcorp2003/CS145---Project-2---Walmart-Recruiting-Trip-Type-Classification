@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Set;
 
 public class RuleItem {
@@ -38,7 +40,11 @@ public class RuleItem {
 	}
 	
 	public ArrayList<String> getDepartmentsAsArray(){
-		return new ArrayList<String>(_departments);
+		
+		ArrayList<String> list = new ArrayList<String>(_departments);
+		Collections.sort(list, String.CASE_INSENSITIVE_ORDER);
+		
+		return list;
 	}
 
 	String getTripType()

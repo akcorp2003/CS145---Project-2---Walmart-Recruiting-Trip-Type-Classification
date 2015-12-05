@@ -321,25 +321,25 @@ public Map<Integer, ArrayList<ArrayList<Attribute>>> buildMatrix(){
 						selfJoin.add(new RuleItem(newList, rule1.getTripType()));
 					}
 				}
-//				else{
-//					boolean same = true;
-//					for(int k = 0; k < x-2; k++){
-//						
-//						if(prevCandidates.get(i).get(k) != prevCandidates.get(j).get(k)){
-//							same = false;
-//						}
-//						
-//					}
-//					if(same){
-//						ArrayList<String> newList = new ArrayList<String>();
-//						for(int k = 0; k < x-2; k++){
-//							newList.add(prevCandidates.get(i).get(k));
-//						}
-//						newList.add(prevCandidates.get(i).get(x-2));
-//						newList.add(prevCandidates.get(j).get(x-2));
-//						selfJoin.add(newList);
-//					}
-//				}
+				else{
+					boolean same = true;
+					for(int k = 0; k < n-2; k++){
+						
+						if(rule1.getDepartmentsAsArray().get(k) != rule2.getDepartmentsAsArray().get(k)){
+							same = false;
+						}
+						
+					}
+					if(same){
+						Set<String> newList = new HashSet<String>();
+						for(int k = 0; k < n-2; k++){
+							newList.add(rule1.getDepartmentsAsArray().get(k));
+						}
+						newList.add(rule1.getDepartmentsAsArray().get(n-2));
+						newList.add(rule2.getDepartmentsAsArray().get(n-2));
+						selfJoin.add(new RuleItem(newList, rule2.getTripType()));
+					}
+				}
 			}
 		}
 		
