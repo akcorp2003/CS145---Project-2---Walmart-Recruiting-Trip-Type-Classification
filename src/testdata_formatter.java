@@ -12,6 +12,11 @@ public class testdata_formatter {
 		_columnHeaders = columnHeaders;
 	}
 	
+	/**
+	 * Parses the raw data of visits into ArrayList<Set<String>> where each index in the ArrayList represents a visit
+	 * and the strings are the departments.
+	 * @return An ArrayList of Sets of Strings where the strings are departments and each index in the arraylist is a visit
+	 */
 	public ArrayList<Set<String>> format_visits(){
 		
 		ArrayList<Set<String>> visits_formatted = new ArrayList<Set<String>>();

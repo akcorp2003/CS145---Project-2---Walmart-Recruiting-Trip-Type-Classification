@@ -124,12 +124,15 @@ public class Entry {
 		ruleSorter.Sort();
 		
 		//here add function of generating classifiers
+		Classifier testdata_classifier = new Classifier(possibleRuleItems, cba.get_CBAmatrix());
 		
 		//then read in test data set and compare to classifiers
 		// need way to write probabilities into csv file
 		CSVfile_returnpackage CSVcontents_test = CSVfileReader(args[1]);
 		testdata_formatter test_f = new testdata_formatter(CSVcontents_test.get_visitsArrayList(), CSVcontents_test.get_columnHeaders());
 		ArrayList<Set<String>> test_departments = test_f.format_visits();
+		ArrayList<Map<Integer, Double>> predicted_data = testdata_classifier.classify(test_departments);
+		
 		//each index in the ArrayList represents an individual visit
 		//inside the Set<String> holds the departments that were purchased from that visit
 		//I imagine iterating through test_departments and for each loop, generate the probabilities and write those out
