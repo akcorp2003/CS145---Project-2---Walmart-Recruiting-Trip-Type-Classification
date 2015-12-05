@@ -1,10 +1,17 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import com.opencsv.CSVWriter;
 
 //import static java.lang.Math.toIntExact;
 
@@ -127,16 +134,18 @@ public class Entry {
 		Classifier testdata_classifier = new Classifier(possibleRuleItems, cba.get_CBAmatrix());
 		
 		//then read in test data set and compare to classifiers
-		// need way to write probabilities into csv file
+		//read in test data
 		CSVfile_returnpackage CSVcontents_test = CSVfileReader(args[1]);
 		testdata_formatter test_f = new testdata_formatter(CSVcontents_test.get_visitsArrayList(), CSVcontents_test.get_columnHeaders());
+		//format the data
 		ArrayList<Set<String>> test_departments = test_f.format_visits();
+		
+		//here is where we classify the data!
 		ArrayList<Map<Integer, Double>> predicted_data = testdata_classifier.classify(test_departments);
 		
-		//each index in the ArrayList represents an individual visit
-		//inside the Set<String> holds the departments that were purchased from that visit
-		//I imagine iterating through test_departments and for each loop, generate the probabilities and write those out
-		//to an appropriate CSV file
+		//write out the probabilities to a CSV file!
+		CSVProbabilityWriter(cba.get_CBAmatrix(), predicted_data, test_f);
+		
 		
 		// then we are DONE!
 	
@@ -179,6 +188,72 @@ public class Entry {
 		CSVfile_returnpackage contents = new CSVfile_returnpackage(tripList, columnHeaders);
 		
 		return contents;
+	}
+	
+	public static void CSVProbabilityWriter(Map<Integer, ArrayList<ArrayList<Attribute>>> cbamatrix,
+			ArrayList<Map<Integer, Double>> predicted_data, testdata_formatter test_f) {
+		// write out to CSV file with properties
+		try {
+			CSVWriter outputwriter = new CSVWriter(new FileWriter("visit_predictions.csv"), '\t');
+			// first write the headers
+			ArrayList<String> headers = new ArrayList<String>();
+			headers.add("VisitNumber");
+
+			// we are sorting the keys because the requirements of the output is
+			// to have the CSV headers to be nicely assorted in
+			// ascending order. Also, it provides uniform layout to the file.
+			// Map<Integer, ArrayList<ArrayList<Attribute>>> cbamatrix =
+			// cba.get_CBAmatrix();
+			Set<Integer> triptypes = cbamatrix.keySet();
+			Object[] triptypes_sorted = cbamatrix.keySet().toArray();
+			Arrays.sort(triptypes_sorted);
+
+			// complete the job of writing the headers
+			for (Object trip : triptypes_sorted) {
+				headers.add("TripType_" + Integer.toString((int) trip));
+			}
+			String[] my_array = new String[headers.size()];
+			headers.toArray(my_array);
+
+			outputwriter.writeNext(my_array);
+
+			Map<Integer, Integer> testdata_indextovisitno = test_f.get_visitnumber_to_indexmap();
+
+			// now write the actual data stuff
+			int index = 0;
+			ArrayList<String> dataline = new ArrayList<String>();
+			for (Map<Integer, Double> visit_predictions : predicted_data) {
+				if (testdata_indextovisitno.containsKey(index)) {
+					int visitno = testdata_indextovisitno.get(index);
+					String visitno_s = Integer.toString(visitno);
+					dataline.add(visitno_s);
+				}
+				for (Object trip : triptypes_sorted) {
+					if (visit_predictions.containsKey((int) trip)) {
+						String probability = new Double(visit_predictions.get((int) trip)).toString();
+						dataline.add(probability);
+					} else {
+						dataline.add("0.0");
+					}
+				} // endfor
+					// with the current visit's probabilities read into the
+					// arraylist for each triptype,
+					// we can prepare it for output!
+				String[] t_array = new String[dataline.size()];
+				dataline.toArray(t_array);
+
+				outputwriter.writeNext(t_array);
+				index++;
+				dataline.clear(); // refresh the dataline
+
+			}
+
+			outputwriter.close(); // is this the right place to put it?
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		// end try-catch block
 	}
 
 }

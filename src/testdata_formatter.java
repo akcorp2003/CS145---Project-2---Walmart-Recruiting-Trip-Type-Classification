@@ -1,15 +1,19 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class testdata_formatter {
 	
 	private ArrayList<String[]> _transactions;
 	private String[] _columnHeaders;
+	private Map<Integer, Integer> _index_to_visitno;
 	
 	public testdata_formatter(ArrayList<String[]> visits, String[] columnHeaders){
 		_transactions = visits;
 		_columnHeaders = columnHeaders;
+		_index_to_visitno = new HashMap<Integer, Integer>();
 	}
 	
 	/**
@@ -21,6 +25,7 @@ public class testdata_formatter {
 		
 		ArrayList<Set<String>> visits_formatted = new ArrayList<Set<String>>();
 		int workingvisit = Integer.MIN_VALUE;
+		int index = 0;
 		for(String[] line : _transactions){
 			int curr_visit = Integer.parseInt(line[0]);
 			if(curr_visit == workingvisit){
@@ -37,9 +42,17 @@ public class testdata_formatter {
 				Set<String> visit_departments = new HashSet<String>();
 				visit_departments.add(line[4]);
 				visits_formatted.add(visit_departments);
-			}
-		}
+				if(!_index_to_visitno.containsKey(index)){
+					_index_to_visitno.put(index, curr_visit);
+					index++;
+				}
+			}//end else
+		}//end for
 		
 		return visits_formatted;
+	}
+	
+	public Map<Integer, Integer> get_visitnumber_to_indexmap(){
+		return _index_to_visitno;
 	}
 }
