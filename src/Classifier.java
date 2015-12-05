@@ -32,7 +32,7 @@ public class Classifier
 		Iterator<ArrayList<String>> it = setString.iterator();
 		int len, i;
 		ArrayList<String> temp;
-		System.out.println("Classifier:")
+		System.out.println("Classifier:");
 		while (it.hasNext())
 		{
 			temp = it.next();
