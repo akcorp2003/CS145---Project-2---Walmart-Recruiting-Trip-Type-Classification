@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Set;
 
 public class RuleItem {
@@ -34,6 +35,10 @@ public class RuleItem {
 	Set<String> getDepartments()
 	{
 		return _departments;
+	}
+	
+	public ArrayList<String> getDepartmentsAsArray(){
+		return new ArrayList<String>(_departments);
 	}
 
 	String getTripType()

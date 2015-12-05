@@ -293,8 +293,59 @@ public Map<Integer, ArrayList<ArrayList<Attribute>>> buildMatrix(){
 	 * @return
 	 */
 	public ArrayList<RuleItem> generateRulesFromCandidates(ArrayList<RuleItem> prevRules, int n){
+		//create a selfJoin list that will hold all the itemsets after self joining
+		ArrayList<RuleItem> selfJoin = new ArrayList<RuleItem>();
+		for(int i = 0; i < prevRules.size(); i++){
+			for(int j = i+1; j < prevRules.size(); j++){
+				
+				RuleItem rule1 = prevRules.get(i);
+				RuleItem rule2 = prevRules.get(j);
+				
+				//for length 2 candidates
+				if(n == 2){
+					if(rule1.getTripType().equals(rule2.getTripType())){
+						String cand1 = rule1.getDepartmentsAsArray().get(0);
+						String cand2 = rule2.getDepartmentsAsArray().get(0);
+						
+						//check that the two candidates are not part of the same attribute
+						//as a trip cannot possible contain two values from the same attribute
+	//					if(!_attributeMap.get(cand1).equals(_attributeMap.get(cand2))){
+	//						ArrayList<String> newList = new ArrayList<String>();
+	//						newList.add(cand1);
+	//						newList.add(cand2);
+	//						selfJoin.add(newList);
+			//			}
+						Set<String> newList = new HashSet<String>();
+						newList.add(cand1);
+						newList.add(cand2);
+						selfJoin.add(new RuleItem(newList, rule1.getTripType()));
+					}
+				}
+//				else{
+//					boolean same = true;
+//					for(int k = 0; k < x-2; k++){
+//						
+//						if(prevCandidates.get(i).get(k) != prevCandidates.get(j).get(k)){
+//							same = false;
+//						}
+//						
+//					}
+//					if(same){
+//						ArrayList<String> newList = new ArrayList<String>();
+//						for(int k = 0; k < x-2; k++){
+//							newList.add(prevCandidates.get(i).get(k));
+//						}
+//						newList.add(prevCandidates.get(i).get(x-2));
+//						newList.add(prevCandidates.get(j).get(x-2));
+//						selfJoin.add(newList);
+//					}
+//				}
+			}
+		}
 		
-		ArrayList<RuleItem> potentials = new ArrayList<RuleItem>();
+		return selfJoin;
+		
+		/*ArrayList<RuleItem> potentials = new ArrayList<RuleItem>();
 		ArrayList<Integer> counts = new ArrayList<Integer>();
 		for (int i = 0; i < prevRules.size(); i++){
 			for (int j = i + 1; j < prevRules.size(); j++){
@@ -308,7 +359,6 @@ public Map<Integer, ArrayList<ArrayList<Attribute>>> buildMatrix(){
 				if(union.size() == n + 1){
 					boolean found = false;
 					for (int x = 0; x < counts.size(); x++){
-						//what's this supposed to check for?
 						if (potentials.get(x).getDepartments().equals(union) &&
 								potentials.get(x).getTripType().equals(tripType)){
 							counts.set(x,counts.get(x) + 1);
@@ -324,12 +374,11 @@ public Map<Integer, ArrayList<ArrayList<Attribute>>> buildMatrix(){
 		}
 		ArrayList<RuleItem> outputRules = new ArrayList<RuleItem>();
 		for (int i = 0; i < counts.size(); i++){
-			//what's this magic formula?? It seems to be prohibiting our rules to get inserted into the output...
 			if(counts.get(i) == (n * (n+1) / 2)){
 				outputRules.add(potentials.get(i));
 			}
 		}
-		return outputRules;
+		return outputRules;*/
 	}
 	
 	/**
