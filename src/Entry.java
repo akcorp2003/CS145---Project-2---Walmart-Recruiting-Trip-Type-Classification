@@ -19,15 +19,17 @@ public class Entry {
 	
 	public static void main(String[] args){
 		
-		if(args.length < 3){
-			System.err.println("Error: Please specify filename of training, filename of test data, and minSup where 0<=minSup<=1");
+		if(args.length < 4){
+			System.err.println("Error: Please specify filename of training, filename of test data, minSup where 0<=minSup<=1, and minComf where 0<=minConf<=1");
 			System.exit(1);
 		}
 		
 		String filename = args[0]; 
 		double minSup = -1;
+		double minConf = -1;
 		try{
 			minSup = Double.parseDouble(args[2]);
+			minConf = Double.parseDouble(args[3]);
 		}
 		catch(NumberFormatException e){
 			System.err.println("Error: Please specify a numerical value for minSup");
@@ -36,6 +38,11 @@ public class Entry {
 		
 		if(minSup > 1 || minSup < 0){
 			System.err.println("Error: Please specify a value between 0 and 1 for minSup");
+			System.exit(1);
+		}
+		
+		if(minConf > 1 || minConf < 0){
+			System.err.println("Error: Please specify a value between 0 and 1 for minConf");
 			System.exit(1);
 		}
 		
@@ -120,7 +127,7 @@ public class Entry {
 		endtime = System.nanoTime();
 		seconds = (double) (endtime-starttime)/1000000000.0;
 		System.out.println("Time it took to compute support and confidence: " + Double.toString(seconds));
-		possibleRuleItems = cba.pruneInfrequentRules(possibleRuleItems,1);
+		possibleRuleItems = cba.pruneInfrequentRules(possibleRuleItems,1, minSup, minConf);
 		
 		//generate new rules of larger size
 		int n = 2;
@@ -134,14 +141,14 @@ public class Entry {
 		while (newRules.size() != 0 ){
 			n= n +1;
 			newRules = cba.computeSupAndConf(newRules);
-			newRules = cba.pruneInfrequentRules(newRules,1);
+			newRules = cba.pruneInfrequentRules(newRules,1, minSup, minConf);
 			possibleRuleItems.addAll(newRules);
 			newRules = cba.generateRulesFromCandidates(newRules,n);
 		}
 		endtime = System.nanoTime();
 		seconds = (double) (endtime-starttime)/1000000000.0;
 		System.out.println("Time it took to generate n-candidates from possibleRules: " + Double.toString(seconds));
-		possibleRuleItems = cba.pruneInfrequentRules(possibleRuleItems,0);
+		possibleRuleItems = cba.pruneInfrequentRules(possibleRuleItems,0, minSup, minConf);
 		
 		//so all rules combined in possibleRuleItems, now sort by confidence, support, then order of generation
 		RuleSorter ruleSorter = new RuleSorter(possibleRuleItems);
