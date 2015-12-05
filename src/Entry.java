@@ -109,14 +109,28 @@ public class Entry {
 		//generate size 1 candidate rule items, calculate support and confidence
 		//and prune infrequent
 		System.out.print("generating rules\n");
+		long starttime = System.nanoTime();
 		ArrayList<RuleItem> possibleRuleItems = cba.generateRules();
+		long endtime = System.nanoTime();
+		double seconds = (double) (endtime-starttime)/1000000000.0;
+		System.out.println("Time it took to generate rules: " + Double.toString(seconds));
+		
+		starttime = System.nanoTime();
 		possibleRuleItems = cba.computeSupAndConf(possibleRuleItems);
+		endtime = System.nanoTime();
+		seconds = (double) (endtime-starttime)/1000000000.0;
+		System.out.println("Time it took to compute support and confidence: " + Double.toString(seconds));
 		possibleRuleItems = cba.pruneInfrequentRules(possibleRuleItems,1);
 		
 		//generate new rules of larger size
 		int n = 2;
+		starttime = System.nanoTime();
 		ArrayList<RuleItem> newRules = cba.generateRulesFromCandidates(possibleRuleItems,n);
+		endtime = System.nanoTime();
+		seconds = (double) (endtime-starttime)/1000000000.0;
+		System.out.println("Time it took to generate 2-candidate from possibleRules: " + Double.toString(seconds));
 		//there are still new rules being generated
+		starttime = System.nanoTime();
 		while (newRules.size() != 0 ){
 			n= n +1;
 			newRules = cba.computeSupAndConf(newRules);
@@ -124,6 +138,9 @@ public class Entry {
 			possibleRuleItems.addAll(newRules);
 			newRules = cba.generateRulesFromCandidates(newRules,n);
 		}
+		endtime = System.nanoTime();
+		seconds = (double) (endtime-starttime)/1000000000.0;
+		System.out.println("Time it took to generate n-candidates from possibleRules: " + Double.toString(seconds));
 		possibleRuleItems = cba.pruneInfrequentRules(possibleRuleItems,0);
 		
 		//so all rules combined in possibleRuleItems, now sort by confidence, support, then order of generation
@@ -194,7 +211,7 @@ public class Entry {
 			ArrayList<Map<Integer, Double>> predicted_data, testdata_formatter test_f) {
 		// write out to CSV file with properties
 		try {
-			CSVWriter outputwriter = new CSVWriter(new FileWriter("visit_predictions.csv"), '\t');
+			CSVWriter outputwriter = new CSVWriter(new FileWriter("visit_predictions.csv"));
 			// first write the headers
 			ArrayList<String> headers = new ArrayList<String>();
 			headers.add("VisitNumber");

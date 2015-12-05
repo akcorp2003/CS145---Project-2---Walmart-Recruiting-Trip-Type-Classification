@@ -1,0 +1,16 @@
+VisitNumber,Weekday,Upc,ScanCount,DepartmentDescription,FinelineNumber
+1,Monday,111111,2,SHOES,44314
+1,Monday,111111,3,TOYS,134213
+1,Monday,111111,5,SHOES,5645514
+1,Monday,111111,1,SHOES,69245561
+2,Friday,666,2,TOYS,84184
+2,Friday,666,10,GROCERIES,5484
+2,Friday,666,1,GROCERIES,7998
+3,Tuesday,1,5,CANDY,7998
+3,Tuesday,1,5,SHOES,7998
+3,Tuesday,1,5,TOYS,7998
+3,Tuesday,1,5,TOYS,7998
+3,Tuesday,1,5,TOYS,7998
+3,Tuesday,1,5,GROCERIES,7998
+4,Thursday,5,2,GROCERIES,7998
+4,Friday,5,2,SEASONAL,7998

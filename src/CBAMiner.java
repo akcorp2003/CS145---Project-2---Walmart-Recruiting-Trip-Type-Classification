@@ -394,7 +394,7 @@ public Map<Integer, ArrayList<ArrayList<Attribute>>> buildMatrix(){
 	 */
 	public ArrayList<RuleItem> pruneInfrequentRules(ArrayList<RuleItem> generatedRules, int flag){
 		double minSup = (double)6/28; //can set to whatever value we want
-		double minConf = 0.3;
+		double minConf = 0.2;
 		if (flag == 1)
 			minConf = 0.0;
 		ArrayList<RuleItem> gr_temp = generatedRules;
