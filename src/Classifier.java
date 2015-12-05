@@ -32,15 +32,16 @@ public class Classifier
 		Iterator<ArrayList<String>> it = setString.iterator();
 		int len, i;
 		ArrayList<String> temp;
+		System.out.println("Classifier:")
 		while (it.hasNext())
 		{
 			temp = it.next();
 			len = temp.size();
 			for (i = 0; i < len; i++)
 				System.out.print(temp.get(i) + " ");
-			System.out.println("" + _classifier.get(temp));
+			System.out.println("-> " + _classifier.get(temp));
 		}
-		System.out.println("default: " + _default);
+		System.out.println("default Trip Type: " + _default);
 		System.out.println("accuracy: " + _accuracy);
 	}
 
